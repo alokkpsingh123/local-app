@@ -14,12 +14,15 @@ import com.squareup.picasso.Picasso
 class ProductListAdapter (var context: Context, var productModelList: List<Product>):
     RecyclerView.Adapter<ProductListAdapter.MyViewModel>(){
 
+    var onItemClick : ((Product) -> Unit)? = null
+
     inner class MyViewModel(itemView: View): RecyclerView.ViewHolder(itemView){
         var imgProduct: ImageView
         var txtProductName: TextView
         var txtBrand: TextView
         var txtPrice: TextView
         var txtDiscount: TextView
+        var txtRating: TextView
 
         init {
             imgProduct = itemView.findViewById(R.id.imgProduct)
@@ -27,6 +30,7 @@ class ProductListAdapter (var context: Context, var productModelList: List<Produ
             txtBrand= itemView.findViewById(R.id.txtBrand)
             txtPrice= itemView.findViewById(R.id.txtPrice)
             txtDiscount= itemView.findViewById(R.id.txtDiscount)
+            txtRating = itemView.findViewById(R.id.txtRating)
         }
     }
 
@@ -38,11 +42,18 @@ class ProductListAdapter (var context: Context, var productModelList: List<Produ
     }
 
     override fun onBindViewHolder(holder: ProductListAdapter.MyViewModel, position: Int) {
-        Picasso.get().load(productModelList[position].thumbnail).into(holder.imgProduct)
-        holder.txtProductName.text = productModelList[position].title
-        holder.txtBrand.text = productModelList[position].brand
-        holder.txtPrice.text = "Price: "+ productModelList[position].price
-        holder.txtDiscount.text = "Discount: "+ productModelList[position].discountPercentage
+
+        val product = productModelList[position]
+        Picasso.get().load(product.thumbnail).into(holder.imgProduct)
+        holder.txtProductName.text = product.title
+        holder.txtBrand.text = product.brand
+        holder.txtPrice.text = "Price: "+ product.price
+        holder.txtDiscount.text = "Discount: "+ product.discountPercentage +"%"
+        holder.txtRating.text = "Rating: "+product.rating
+
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(product)
+        }
     }
 
     override fun getItemCount(): Int {

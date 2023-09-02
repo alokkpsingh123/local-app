@@ -1,5 +1,7 @@
 package com.example.localapp
 
+import android.content.Intent
+import android.os.Build.VERSION_CODES.P
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -42,9 +44,16 @@ class MainActivity : AppCompatActivity() {
 
             if (it != null) {
                 adapter = ProductListAdapter(this, it.products)
+                adapter.onItemClick = {
+                    val intent = Intent(this, MainProductActivity::class.java)
+                    intent.putExtra("product", it)
+                    startActivity(intent)
+                }
                 adapter!!.notifyDataSetChanged()
                 recyclerView!!.adapter = adapter
             }
         }
+
+
     }
 }
